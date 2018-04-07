@@ -165,7 +165,31 @@ void loop() {
       }
     }
 
+	if (USE_SERIAL.available()){
+		int c = Serial.read();
 
+		if (c == 'o') {
+			USE_SERIAL.println("Turning on");
+			handleClientData(0, "o0");
+		} else if (c == 'f') {
+			USE_SERIAL.println("Turning off");
+			handleClientData(0, "o1");
+		} else if (c == 's') {
+			readPower();
+			USE_SERIAL.println("");
+			USE_SERIAL.print(volt);
+			USE_SERIAL.println(" V");
+			USE_SERIAL.print(ampere);
+			USE_SERIAL.println(" A");
+			USE_SERIAL.print(watt);
+			USE_SERIAL.println(" W");
+			USE_SERIAL.println("");
+			USE_SERIAL.flush();
+		} else {
+			USE_SERIAL.println("Press 'o' (on) or 'f' (off) or 's' (status)\n");
+			USE_SERIAL.flush();
+		}
+	}
 }
 
 void webserver_init(void)
@@ -278,7 +302,7 @@ void handleClientData(uint8_t num, String data)
 		}
 		digitalWrite(POWER, onoff);
 		digitalWrite(POWERLED, LOW);
-		send_data_to_clients(String(CMD_ONOFF) + onoff, HOME, num);
+		send_data_to_clients(String(CMD_ONOFF) + onoff, HOME);
 		break;
 	case SET_VOLTAGE:
         setVoltage = data.substring(1).toFloat();
