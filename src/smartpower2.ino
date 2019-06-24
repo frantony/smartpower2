@@ -686,7 +686,7 @@ unsigned long currtime;
 unsigned char btnChanged;
 unsigned char resetCnt;
 unsigned char swlock;
-void pinChanged()
+void ICACHE_RAM_ATTR pinChanged()
 {
     if ((millis() - currtime) > 30) {
         swlock = 0;
